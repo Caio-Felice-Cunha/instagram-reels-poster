@@ -1,0 +1,26 @@
+{
+  "name": "instagram-reels-poster",
+  "version": "1.0.0",
+  "description": "Post Reels to Instagram by driving instagram.com in your own logged-in Chrome over the DevTools Protocol. No Graph API, no OS file dialog.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "post": "node src/post.mjs",
+    "batch": "node src/batch.mjs",
+    "connect-check": "node src/connect-check.mjs"
+  },
+  "dependencies": {
+    "playwright-core": "^1.49.0"
+  },
+  "keywords": [
+    "instagram",
+    "reels",
+    "automation",
+    "playwright",
+    "cdp",
+    "social-media"
+  ]
+}

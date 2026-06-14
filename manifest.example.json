@@ -1,0 +1,15 @@
+[
+  {
+    "file": "reel-one.mp4",
+    "caption": "Your caption goes here.\n\nLine breaks are kept.\n#your #hashtags #here",
+    "location": "New York, NY"
+  },
+  {
+    "file": "reel-two.mp4",
+    "caption": "A second caption. Leave out \"location\" to skip the location tag."
+  },
+  {
+    "file": "reel-three.mp4",
+    "caption": ""
+  }
+]
