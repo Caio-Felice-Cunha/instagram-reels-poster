@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "tool": "Instagram Reels Poster",
+  "mode": "demo",
+  "fixture": "manifest.example.json",
+  "generatedAt": "2026-08-29T12:00:00.000Z",
+  "items": [
+    {
+      "key": "reel-one.mp4",
+      "status": "simulated",
+      "ok": true,
+      "id": "ig-1",
+      "label": "reel-one.mp4",
+      "scheduledFor": null,
+      "steps": [
+        {
+          "name": "validate-fixture",
+          "status": "passed",
+          "detail": "Synthetic filename and caption accepted."
+        },
+        {
+          "name": "prepare-reel",
+          "status": "passed",
+          "detail": "68 caption characters prepared."
+        },
+        {
+          "name": "tag-location",
+          "status": "passed",
+          "detail": "Synthetic location selected: New York, NY."
+        },
+        {
+          "name": "simulate-share",
+          "status": "simulated",
+          "detail": "No browser was opened and Instagram was not contacted."
+        },
+        {
+          "name": "persist-resume-state",
+          "status": "simulated",
+          "detail": "The mock marks this fixture item complete for a resumable batch."
+        }
+      ]
+    },
+    {
+      "key": "reel-two.mp4",
+      "status": "simulated",
+      "ok": true,
+      "id": "ig-2",
+      "label": "reel-two.mp4",
+      "scheduledFor": null,
+      "steps": [
+        {
+          "name": "validate-fixture",
+          "status": "passed",
+          "detail": "Synthetic filename and caption accepted."
+        },
+        {
+          "name": "prepare-reel",
+          "status": "passed",
+          "detail": "64 caption characters prepared."
+        },
+        {
+          "name": "tag-location",
+          "status": "skipped",
+          "detail": "No location requested."
+        },
+        {
+          "name": "simulate-share",
+          "status": "simulated",
+          "detail": "No browser was opened and Instagram was not contacted."
+        },
+        {
+          "name": "persist-resume-state",
+          "status": "simulated",
+          "detail": "The mock marks this fixture item complete for a resumable batch."
+        }
+      ]
+    },
+    {
+      "key": "reel-three.mp4",
+      "status": "simulated",
+      "ok": true,
+      "id": "ig-3",
+      "label": "reel-three.mp4",
+      "scheduledFor": null,
+      "steps": [
+        {
+          "name": "validate-fixture",
+          "status": "passed",
+          "detail": "Synthetic filename and caption accepted."
+        },
+        {
+          "name": "prepare-reel",
+          "status": "passed",
+          "detail": "0 caption characters prepared."
+        },
+        {
+          "name": "tag-location",
+          "status": "skipped",
+          "detail": "No location requested."
+        },
+        {
+          "name": "simulate-share",
+          "status": "simulated",
+          "detail": "No browser was opened and Instagram was not contacted."
+        },
+        {
+          "name": "persist-resume-state",
+          "status": "simulated",
+          "detail": "The mock marks this fixture item complete for a resumable batch."
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total": 3,
+    "simulated": 3,
+    "failed": 0,
+    "externalWrites": 0
+  }
+}

@@ -1,4 +1,27 @@
-# instagram-reels-poster
+# Instagram Reels Poster
+
+Safely rehearse a Reel batch offline, then run the same batch engine against your own attached Chrome when you deliberately choose live mode.
+
+![Instagram Reels Poster social preview](site/social-card.svg)
+
+[Try the demo](https://caio-felice-cunha.github.io/instagram-reels-poster/) · [Read the case study](#architecture) · [Run locally](#offline-demo)
+
+**Interactive demo** · No login · No network call · No external write
+
+## Offline demo
+
+```bash
+npm install
+npm run demo
+```
+
+Open `site/index.html` through a static server. The versioned fixture is processed by a mock adapter and produces `site/demo-report.json`. Demo mode never imports Playwright, opens Chrome, contacts Instagram, or shares content.
+
+## Architecture
+
+`batch-core.mjs` owns resumable sequencing. Live mode injects the CDP-backed posting adapter; demo mode injects a deterministic mock adapter. Tests guard this dependency boundary.
+
+> **Live mode is explicit and potentially consequential.** Only `npm run batch` / `npm run post` can attach to Chrome and publish. Review the manifest first and use only accounts and media you control.
 
 Post **Reels** to Instagram by driving **instagram.com** in your own logged-in
 Chrome over the Chrome DevTools Protocol (CDP). No Graph API, no Business account,
