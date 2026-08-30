@@ -1,3 +1,125 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A deterministic, zero-network replay of an Instagram Reels batch."><title>Instagram Reels Poster - Offline Demo</title><link rel="stylesheet" href="styles.css"></head>
-<body><main><p class="eyebrow">INTERACTIVE DEMO · ZERO EXTERNAL WRITES</p><h1>A Reel batch, rehearsed safely.</h1><p class="lede">Inspect every validation and share step without opening Chrome, contacting Instagram, or publishing content.</p><div class="actions"><button id="run" type="button">Replay batch</button><a href="https://github.com/Caio-Felice-Cunha/instagram-reels-poster#readme">Read the case study</a></div><section aria-labelledby="summary-title"><h2 id="summary-title">Run summary</h2><div id="summary" class="summary" aria-live="polite"></div></section><section aria-labelledby="items-title"><h2 id="items-title">Fixture items</h2><div id="items" class="items"></div></section></main><script type="module" src="app.js"></script></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interactive offline replay and engineering case study for a resumable Instagram Reels batch tool.">
+  <meta name="theme-color" content="#0d0811">
+  <title>Instagram Reels Poster — Engineering case</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="case.css">
+</head>
+<body>
+  <a class="skip-link" href="#demo">Skip to demo</a>
+  <header class="topbar">
+    <a class="brand" href="#top">IG<span>/batch</span></a>
+    <nav aria-label="Primary"><a href="#demo">Demo</a><a href="#architecture">Architecture</a><a href="#code">Code</a></nav>
+    <a href="https://github.com/Caio-Felice-Cunha/instagram-reels-poster">View source ↗</a>
+  </header>
+  <main id="top">
+    <section class="hero">
+      <p class="eyebrow">Interactive demo · zero external writes</p>
+      <h1>A Reel batch,<br><em>rehearsed safely.</em></h1>
+      <p class="lede">Replay validation, preparation, pacing, and resumable state without opening Chrome, contacting Instagram, or sharing content.</p>
+      <div class="actions">
+        <a class="button primary" href="#demo">Try the demo</a>
+        <a class="button" href="#architecture">Engineering case</a>
+        <a class="button" href="https://github.com/Caio-Felice-Cunha/instagram-reels-poster">View source</a>
+        <a class="button" href="#run">Run locally</a>
+      </div>
+    </section>
+
+    <section id="demo" class="demo-section" aria-labelledby="demo-title" tabindex="-1">
+      <div class="section-head"><div><p class="eyebrow">60-second deterministic replay</p><h2 id="demo-title">Follow every fixture item.</h2></div><p>The versioned fixture goes through the same batch contract as live mode, but a local adapter replaces every browser action.</p></div>
+      <button id="run" type="button">Replay batch</button>
+      <div id="summary" class="summary" aria-live="polite"></div>
+      <div id="items" class="items" aria-label="Fixture results"></div>
+    </section>
+
+    <section class="case-section problem">
+      <div><p class="eyebrow">Problem</p><h2>Browser automation is easy to start and hard to make safe.</h2></div>
+      <div class="prose"><p>A long media batch must survive interruption, respect pacing, prove that captions landed, and stop when the platform signals a restriction. Retrying blindly can duplicate posts or compound an account block.</p><p>The design moves sequencing and resume state into a pure core. Volatile Instagram selectors live behind one adapter, and the public demo cannot even load that adapter.</p></div>
+    </section>
+
+    <section id="architecture" class="case-section">
+      <div class="section-head"><div><p class="eyebrow">Architecture</p><h2>Pure batch core. Explicit side-effect boundary.</h2></div><p>Dependency injection makes the safe path visible: demo and live share orchestration semantics, not capabilities.</p></div>
+      <div class="flow" role="img" aria-label="A manifest flows through validation, a resumable batch core, an injected demo or live adapter, verification, and durable state.">
+        <span>manifest.json</span><b>→</b><span>validation</span><b>→</b><span>batch core</span><b>→</b><span class="split">demo adapter<br><small>or live CDP adapter</small></span><b>→</b><span>verification</span><b>→</b><span>resume state</span>
+      </div>
+      <div class="card-grid four">
+        <article><h3>Manifest</h3><p>Stable file key, caption, optional location, and crop intent make each item versionable.</p></article>
+        <article><h3>Batch core</h3><p>Owns ordering, stable-key deduplication, spacing, failure stops, events, and completed keys.</p></article>
+        <article><h3>Adapters</h3><p>The mock emits deterministic steps. The live adapter alone imports Playwright and CDP.</p></article>
+        <article><h3>Evidence</h3><p>Demo reports and live state record item outcomes so an interrupted run can resume.</p></article>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <div class="section-head"><div><p class="eyebrow">Workflow</p><h2>Six guarded transitions before the next Reel.</h2></div><p>Each transition has a concrete success signal; a failure stops the batch instead of allowing unsafe continuation.</p></div>
+      <ol class="state-flow">
+        <li><b>01</b><strong>Validate</strong><span>Resolve media and stable key.</span></li>
+        <li><b>02</b><strong>Attach</strong><span>Inject the file through CDP.</span></li>
+        <li><b>03</b><strong>Prepare</strong><span>Set crop, caption, and location.</span></li>
+        <li><b>04</b><strong>Verify</strong><span>Read the caption field back.</span></li>
+        <li><b>05</b><strong>Share</strong><span>Live adapter only; wait for completion.</span></li>
+        <li><b>06</b><strong>Persist</strong><span>Write completed key, then pace.</span></li>
+      </ol>
+      <div class="decision-grid">
+        <article><strong>Caption + location evidence</strong><p>The Lexical field is read back after keystrokes and a mismatch raises <code>CAPTION_NOT_SET</code>. Optional location matching is best-effort and records <code>locationSet</code> rather than blocking the Reel.</p></article>
+        <article><strong>Action-block stop</strong><p>Restriction copy raises <code>ACTION_BLOCKED</code>; the batch terminates and tells the operator not to retry that day.</p></article>
+        <article><strong>Resumable by key</strong><p>Completed filenames are skipped before adapter execution, preventing accidental repeats after interruption.</p></article>
+      </div>
+    </section>
+
+    <section id="code" class="case-section">
+      <div class="section-head"><div><p class="eyebrow">Real, linked code</p><h2>Safety is executable, not aspirational.</h2></div><p>These excerpts come from the public repository. Links open the complete implementation.</p></div>
+      <div class="code-grid">
+        <article><header><span>CAPTION READBACK</span><a href="https://github.com/Caio-Felice-Cunha/instagram-reels-poster/blob/main/src/post.mjs">post.mjs ↗</a></header><pre><code>const got = String(await cap.innerText())
+  .replace(/\s+/g, ' ').trim();
+const probe = caption.replace(/\s+/g, ' ')
+  .trim().slice(0, 25);
+
+if (probe &amp;&amp; (!got || !got.includes(probe))) {
+  throw new Error('CAPTION_NOT_SET');
+}</code></pre><p>The tool refuses to share when visible editor state does not match the requested caption.</p></article>
+        <article><header><span>IDEMPOTENT RESUME</span><a href="https://github.com/Caio-Felice-Cunha/instagram-reels-poster/blob/main/src/batch-core.mjs">batch-core.mjs ↗</a></header><pre><code>if (doneSet.has(key)) {
+  results.push({ key, status: 'skipped', steps: [] });
+  onEvent({ type: 'skipped', key, done: [...doneSet] });
+  continue;
+}</code></pre><p>The core checks durable completion before the side-effect adapter can run.</p></article>
+        <article><header><span>ACTION-BLOCK GUARD</span><a href="https://github.com/Caio-Felice-Cunha/instagram-reels-poster/blob/main/src/post.mjs">post.mjs ↗</a></header><pre><code>if (/Action Blocked|Try Again Later|
+  restrict certain activity/i.test(body)) {
+  throw new Error('ACTION_BLOCKED');
+}
+if (/has been shared/i.test(body)) {
+  posted = true;
+  break;
+}</code></pre><p>Platform feedback is treated as a hard stop, while a positive completion signal advances state.</p></article>
+      </div>
+    </section>
+
+    <section class="case-section boundary">
+      <div class="section-head"><div><p class="eyebrow">Security boundary</p><h2>Demo and live mode have different dependency graphs.</h2></div><p>The offline route does not rely on flags inside a loaded live client; it never imports that client.</p></div>
+      <div class="boundary-grid"><article><span>DEMO</span><h3><code>npm run demo</code></h3><ul><li>Synthetic local fixture</li><li>Mock adapter</li><li>Static JSON report</li><li>No Playwright, CDP, login, or network</li></ul></article><article><span>LIVE</span><h3><code>npm run batch</code></h3><ul><li>Operator-owned media</li><li>Attached Chrome profile</li><li>Immediate Instagram sharing</li><li>Explicit, consequential command</li></ul></article></div>
+    </section>
+
+    <section class="case-section">
+      <div class="section-head"><div><p class="eyebrow">Quality and limitations</p><h2>What is proven — and what remains volatile.</h2></div></div>
+      <div class="quality-grid"><article><strong>0</strong><span>demo external writes</span></article><article><strong>5</strong><span>offline core tests</span></article><article><strong>3</strong><span>synthetic fixture items</span></article><article><strong>1</strong><span>explicit live boundary</span></article></div>
+      <ul class="limits"><li>Unit tests cover orchestration, report contract, deterministic output, safe imports, and HTML injection sinks.</li><li>Pages tests cover desktop/mobile layout, keyboard navigation, reduced motion, report parity, console errors, and unexpected external requests.</li><li>Instagram has no scheduling step in this web flow; live mode posts immediately and must be operator supervised.</li><li>Selectors and copy are controlled by Instagram and may require maintenance after UI changes.</li><li>Pacing reduces risk but cannot guarantee that a platform will accept automated activity.</li></ul>
+    </section>
+
+    <section id="run" class="run-card"><div><p class="eyebrow">Run locally</p><h2>Replay without credentials.</h2><p>The fixture and output directory are versioned and configurable.</p></div><pre><code>npm install
+npm run demo
+npm test
+npm run test:site
+
+# equivalent explicit CLI
+node src/demo.mjs \
+  --fixture manifest.example.json \
+  --output site</code></pre></section>
+  </main>
+  <footer><span>MIT-licensed demonstration code by Caio Di Felice Cunha</span><a href="https://github.com/Caio-Felice-Cunha/instagram-reels-poster#one-time-setup">Operator guide ↗</a></footer>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
