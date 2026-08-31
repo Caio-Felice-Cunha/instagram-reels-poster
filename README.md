@@ -4,7 +4,7 @@ Safely rehearse a Reel batch offline, then run the same batch engine against you
 
 ![Instagram Reels Poster social preview](site/social-card.svg)
 
-[Try the demo](https://caio-felice-cunha.github.io/instagram-reels-poster/) · [Read the case study](#architecture) · [Run locally](#offline-demo)
+[Try the demo](https://caio-felice-cunha.github.io/instagram-reels-poster/) · [Engineering case](https://caio-felice-cunha.github.io/instagram-reels-poster/#architecture) · [View source](https://github.com/Caio-Felice-Cunha/instagram-reels-poster) · [Run locally](#offline-demo)
 
 **Interactive demo** · No login · No network call · No external write
 

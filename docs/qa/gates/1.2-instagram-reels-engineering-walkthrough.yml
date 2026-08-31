@@ -1,0 +1,25 @@
+schema: 1
+story: '1.2'
+gate: PASS
+status_reason: >-
+  The case documents batch-core, CDP adapter, verification, pacing, action-block,
+  and resume behavior while preserving a zero-CDP, zero-write demo; all local and
+  GitHub Actions unit, browser, accessibility, and security gates pass.
+reviewer: 'Quinn'
+reviewed_revision: 'commit:ffa5e453deecf42606bb4745c513eeee78ca6eee'
+updated: '2026-08-30T18:20:00-07:00'
+top_issues: []
+waiver:
+  active: false
+evidence:
+  tests:
+    node: '5 passed'
+    playwright: '6 passed'
+  quality:
+    wcag_aa: passed
+    injection_safety: passed
+    unexpected_external_requests: none
+    console_errors: none
+  review_note: >-
+    CodeRabbit CLI authentication was unavailable; manual evidence-based review found
+    no release-blocking issue.
